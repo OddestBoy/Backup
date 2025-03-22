@@ -1,0 +1,4 @@
+@(
+"C:\Users\JoeBlogs\Documents\FolderToExclude",
+"C:\Users\JoeBlogs\Documents\ExcludeThisToo"
+)
