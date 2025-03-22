@@ -1,0 +1,17 @@
+#These are the folders to be backed up
+$Locations = @(
+"C:\Users\JoeBlogs\Documents\",
+"C:\Users\JoeBlogs\Pictures"
+)
+
+#This is where the backups will be stored
+$BackupFolders = @(
+"D:\Backups",
+"G:\My Drive\Backups"
+)
+
+#This is where backups are staged while being processed, they are deleted when the script completes
+$StagingFolder = "C:\BackupStaging"
+
+#Exclude subfolders by placing BackupConfig.txt in the parent folder listed in $Locations
+#List any subfolders that you don't want backing up
