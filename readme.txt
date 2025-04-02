@@ -12,6 +12,7 @@ By default, if there is no existing file list (ie on first run), a full backup w
 
 The script can be called from the command line, with any of the following options:
 -TargetFolder : A specific folder to backup, rather than using the folders listed in BackupConfig.txt
+-TargetBackup : A specific folder to move the backup to, rather than the destinations from BackupConfig.txt
 -FullBackup : Force a full backup
 -Quick : Use quicker but less space-saving compression
 -Audit : Just build file list, without backing up files
