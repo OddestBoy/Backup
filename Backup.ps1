@@ -1,5 +1,6 @@
 param(
     [parameter(HelpMessage="Specific folder path to backup")][string]$TargetFolder,
+    [parameter(HelpMessage="Specific folder path to save backup to")][string]$TargetBackup,
     [parameter(HelpMessage="Run full backup rathan differential")][switch]$FullBackup,
     [parameter(HelpMessage="Use faster compression, results in larger backup file")][switch]$Quick,
     [parameter(HelpMessage="List files only, without backing them up")][switch]$Audit
@@ -69,28 +70,6 @@ if($Locations.Length -eq 0){Error -Message "`$Locations no folders selected to b
 if($BackupFolders.Length -eq 0){Error -Message "`$Locations no folders selected to store backup" -Fatal}
 
 #Check target files and backup locations exist
-$FolderCount = $Locations.length
-$Locations | ForEach-Object {
-    if(!(Test-Path $_)){
-        $FolderCount = $FolderCount - 1
-        if($FolderCount -eq 0){
-        Error -Message "Unable to find $_ - No other valid folders to backup have been selected!" -Fatal
-        } else {
-            Error -Message "Unable to find $_"
-        }
-    }
-}
-$FolderCount = $BackupFolders.length
-$BackupFolders | ForEach-Object {
-    if(!(Test-Path $_)){
-        $FolderCount = $FolderCount - 1
-        if($FolderCount -eq 0){
-        Error -Message "Unable to find $_ - No other valid locations to store backups have been selected!" -Fatal
-        } else {
-            Error -Message "Unable to find $_"
-        }
-    }
-}
 $ScriptPath = $PSScriptRoot
 #Options
 #Allow user to specifiy full backup from terminal
@@ -117,6 +96,11 @@ if($TargetFolder){
     $CustomName = ""
     $Target = "Standard (From config)"
 }
+#Custom backup location
+if($TargetBackup){
+    $TargetBackup = $TargetBackup.ToString()
+    $BackupFolders = $TargetBackup
+}
 if($Audit){
     $Type = "Audit"
 } elseif($DifferentialBackup -and (Test-Path "$ScriptPath\$FullFileList")) {
@@ -129,6 +113,28 @@ if(!(Test-Path "$ScriptPath\$FullFileList")){
     Write-Host "$ScriptPath\$FullFileList does not exist, setting backup type to Full"
     $Type = "Full"
     $DifferentialBackup = $false
+}
+$FolderCount = $Locations.length
+$Locations | ForEach-Object {
+    if(!(Test-Path $_)){
+        $FolderCount = $FolderCount - 1
+        if($FolderCount -eq 0){
+        Error -Message "Unable to find $_ - No other valid folders to backup have been selected!" -Fatal
+        } else {
+            Error -Message "Unable to find $_"
+        }
+    }
+}
+$FolderCount = $BackupFolders.length
+$BackupFolders | ForEach-Object {
+    if(!(Test-Path $_)){
+        $FolderCount = $FolderCount - 1
+        if($FolderCount -eq 0){
+        Error -Message "Unable to find $_ - No other valid locations to store backups have been selected!" -Fatal
+        } else {
+            Error -Message "Unable to find $_"
+        }
+    }
 }
 
 echo "$Date - $StartTime - Type: $Type - Targeting: $Target - Compression: $SpeedType" | Out-File -FilePath "$PSScriptRoot\BackupLog.txt" -Append
